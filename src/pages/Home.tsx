@@ -81,19 +81,11 @@ export default function Home() {
       {/* Logos Strip */}
       <section className="py-16 border-y border-[var(--border)] bg-[var(--panel)]">
         <div className="container mx-auto px-4">
-          <p
-            className="text-center text-[var(--text-secondary)] mb-8 text-sm uppercase tracking-wider"
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
+          <p className="text-center text-[var(--text-secondary)] mb-8 text-sm uppercase tracking-wider">
             Trusted by leading robotics teams
           </p>
 
-          <div
-            className="flex flex-wrap justify-center items-center gap-8 md:gap-12"
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
             {partnerLogos.map((logo) => (
               <Badge
                 key={logo}
@@ -109,11 +101,7 @@ export default function Home() {
 
       {/* Value Props */}
       <section className="py-24 container mx-auto px-4">
-        <div
-          className="text-center mb-16"
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
+        <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-4">
             Why Asimov?
           </h2>
@@ -151,11 +139,7 @@ export default function Home() {
 
       {/* CTA Strip */}
       <section className="py-20 container mx-auto px-4">
-        <div
-          className="max-w-4xl mx-auto text-center glass rounded-2xl p-12"
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-        >
+        <div className="max-w-4xl mx-auto text-center glass rounded-2xl p-12">
           <h2 className="text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-6">
             Ready to pilot?
           </h2>

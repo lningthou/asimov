@@ -8,7 +8,6 @@ import SearchBar from '@/components/search/SearchBar';
 import FiltersPanel from '@/components/search/FiltersPanel';
 import ResultsGrid from '@/components/search/ResultsGrid';
 import { mockData } from '@/components/search/mockData';
-import type { DataResult } from '@/components/search/mockData';
 
 export default function Search() {
   const [searchQuery, setSearchQuery] = useState('');

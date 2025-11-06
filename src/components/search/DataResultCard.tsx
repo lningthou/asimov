@@ -28,7 +28,7 @@ export default function DataResultCard({ result }: DataResultCardProps) {
 
   return (
     <>
-      <GlassCard hover={true} animate={true} className="flex flex-col h-full">
+      <GlassCard hover={true} className="flex flex-col h-full">
         {/* Thumbnail placeholder */}
         <div className="w-full aspect-video bg-gradient-to-br from-[var(--panel)] to-[var(--panel-strong)] rounded-lg mb-4 flex items-center justify-center border border-[var(--border)]">
           <Play size={48} className="text-[var(--text-secondary)] opacity-50" />
