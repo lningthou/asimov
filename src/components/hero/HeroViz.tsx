@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface Particle {
   x: number;
@@ -16,7 +16,7 @@ export default function HeroViz() {
   const particlesRef = useRef<Particle[]>([]);
   const timeRef = useRef(0);
   const isPausedRef = useRef(false);
-  const [isReady, setIsReady] = useState(false);
+  const isInitializedRef = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -181,10 +181,10 @@ export default function HeroViz() {
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (entry.contentRect.width > 0 && entry.contentRect.height > 0) {
-          if (!isReady) {
+          if (!isInitializedRef.current) {
             const success = setup();
             if (success) {
-              setIsReady(true);
+              isInitializedRef.current = true;
               animate();
             }
           } else {
@@ -209,7 +209,7 @@ export default function HeroViz() {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('resize', handleResize);
     };
-  }, [isReady]);
+  }, []);
 
   return (
     <div ref={containerRef} className="relative w-full h-full hairline">

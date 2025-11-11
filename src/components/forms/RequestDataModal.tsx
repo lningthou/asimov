@@ -9,7 +9,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 
 interface RequestDataModalProps {
@@ -23,14 +22,6 @@ export default function RequestDataModal({ open, onOpenChange }: RequestDataModa
     email: '',
     company: '',
     dataNeeds: '',
-    hardware: {
-      umi: false,
-      camera: false,
-      smartphone: false,
-      aloha: false,
-      forceSensing: false,
-    },
-    otherHardware: '',
   });
 
   // Preserve scroll position when modal opens/closes
@@ -65,28 +56,10 @@ export default function RequestDataModal({ open, onOpenChange }: RequestDataModa
       email: '',
       company: '',
       dataNeeds: '',
-      hardware: {
-        umi: false,
-        camera: false,
-        smartphone: false,
-        aloha: false,
-        forceSensing: false,
-      },
-      otherHardware: '',
     });
     
     // Close modal
     onOpenChange(false);
-  };
-
-  const handleHardwareChange = (key: keyof typeof formData.hardware) => {
-    setFormData(prev => ({
-      ...prev,
-      hardware: {
-        ...prev.hardware,
-        [key]: !prev.hardware[key],
-      },
-    }));
   };
 
   return (
@@ -161,77 +134,6 @@ export default function RequestDataModal({ open, onOpenChange }: RequestDataModa
                 className="hairline bg-[var(--surface)] min-h-[120px]"
                 rows={5}
                 required
-              />
-            </div>
-          </div>
-
-          {/* Hardware Requirements Section */}
-          <div className="space-y-5 pt-2">
-            <div>
-              <span className="tag mb-3 inline-block">HARDWARE</span>
-              <p className="text-sm text-secondary">What hardware is required for collection?</p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 p-4 bg-[var(--surface)] hairline">
-              <div className="flex items-center space-x-3">
-                <Checkbox
-                  id="umi"
-                  checked={formData.hardware.umi}
-                  onCheckedChange={() => handleHardwareChange('umi')}
-                  className="rounded-none border-[var(--border-strong)]"
-                />
-                <Label htmlFor="umi" className="cursor-pointer font-normal">UMI</Label>
-              </div>
-
-              <div className="flex items-center space-x-3">
-                <Checkbox
-                  id="camera"
-                  checked={formData.hardware.camera}
-                  onCheckedChange={() => handleHardwareChange('camera')}
-                  className="rounded-none border-[var(--border-strong)]"
-                />
-                <Label htmlFor="camera" className="cursor-pointer font-normal">Camera</Label>
-              </div>
-
-              <div className="flex items-center space-x-3">
-                <Checkbox
-                  id="smartphone"
-                  checked={formData.hardware.smartphone}
-                  onCheckedChange={() => handleHardwareChange('smartphone')}
-                  className="rounded-none border-[var(--border-strong)]"
-                />
-                <Label htmlFor="smartphone" className="cursor-pointer font-normal">Smartphone</Label>
-              </div>
-
-              <div className="flex items-center space-x-3">
-                <Checkbox
-                  id="aloha"
-                  checked={formData.hardware.aloha}
-                  onCheckedChange={() => handleHardwareChange('aloha')}
-                  className="rounded-none border-[var(--border-strong)]"
-                />
-                <Label htmlFor="aloha" className="cursor-pointer font-normal">ALOHA</Label>
-              </div>
-
-              <div className="flex items-center space-x-3 col-span-2">
-                <Checkbox
-                  id="forceSensing"
-                  checked={formData.hardware.forceSensing}
-                  onCheckedChange={() => handleHardwareChange('forceSensing')}
-                  className="rounded-none border-[var(--border-strong)]"
-                />
-                <Label htmlFor="forceSensing" className="cursor-pointer font-normal">Force sensing</Label>
-              </div>
-            </div>
-
-            <div className="space-y-2 pt-1">
-              <Label htmlFor="otherHardware" className="text-xs uppercase tracking-wide text-secondary">Other hardware</Label>
-              <Input
-                id="otherHardware"
-                value={formData.otherHardware}
-                onChange={(e) => setFormData({ ...formData, otherHardware: e.target.value })}
-                placeholder="Specify any other hardware..."
-                className="hairline bg-[var(--surface)] h-11"
               />
             </div>
           </div>
