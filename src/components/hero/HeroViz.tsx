@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Particle {
   x: number;
@@ -11,14 +11,17 @@ interface Particle {
 
 export default function HeroViz() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const animationFrameRef = useRef<number | undefined>(undefined);
   const particlesRef = useRef<Particle[]>([]);
   const timeRef = useRef(0);
   const isPausedRef = useRef(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
     const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
@@ -29,10 +32,12 @@ export default function HeroViz() {
     // Setup function
     const setup = () => {
       const dpr = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
+      const rect = container.getBoundingClientRect();
 
       // Only setup if we have valid dimensions
-      if (rect.width === 0 || rect.height === 0) return;
+      if (rect.width === 0 || rect.height === 0) {
+        return false;
+      }
 
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
@@ -57,6 +62,8 @@ export default function HeroViz() {
           baseY: y,
         });
       }
+
+      return true;
     };
 
     // Flow field calculation with fixed loop
@@ -84,7 +91,7 @@ export default function HeroViz() {
     const animate = () => {
       if (isPausedRef.current) return;
 
-      const rect = canvas.getBoundingClientRect();
+      const rect = container.getBoundingClientRect();
       ctx.clearRect(0, 0, rect.width, rect.height);
 
       timeRef.current += prefersReducedMotion ? 0.1 : 1;
@@ -170,18 +177,24 @@ export default function HeroViz() {
       setup();
     };
 
-    // Initialize with slight delay to ensure layout is complete
-    const initTimeout = setTimeout(() => {
-      setup();
-      animate();
-    }, 0);
-
-    // Also try immediate setup in case layout is ready
-    requestAnimationFrame(() => {
-      if (particlesRef.current.length === 0) {
-        setup();
+    // Use ResizeObserver to wait for proper dimensions
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.contentRect.width > 0 && entry.contentRect.height > 0) {
+          if (!isReady) {
+            const success = setup();
+            if (success) {
+              setIsReady(true);
+              animate();
+            }
+          } else {
+            setup();
+          }
+        }
       }
     });
+
+    resizeObserver.observe(container);
 
     // Event listeners
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -189,17 +202,17 @@ export default function HeroViz() {
 
     // Cleanup
     return () => {
-      clearTimeout(initTimeout);
+      resizeObserver.disconnect();
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [isReady]);
 
   return (
-    <div className="relative w-full h-full hairline">
+    <div ref={containerRef} className="relative w-full h-full hairline">
       <canvas
         ref={canvasRef}
         className="w-full h-full"
