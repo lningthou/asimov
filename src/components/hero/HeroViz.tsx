@@ -54,15 +54,20 @@ export default function HeroViz() {
       }
     };
 
-    // Flow field calculation
+    // Flow field calculation with fixed loop
     const getFlowField = (x: number, y: number, time: number) => {
       const scale = 0.003;
       const timeScale = 0.0005;
+      
+      // Loop duration: 8 seconds at 60fps = 480 frames
+      const loopDuration = 480;
+      const loopTime = (time % loopDuration) / loopDuration; // 0 to 1
+      const smoothTime = loopTime * Math.PI * 2; // Convert to radians for smooth loop
 
-      // Simple perlin-like noise using sine waves
+      // Smooth looping flow field using sine waves
       const angle =
-        Math.sin(x * scale + time * timeScale) *
-        Math.cos(y * scale - time * timeScale * 0.7) *
+        Math.sin(x * scale + smoothTime) *
+        Math.cos(y * scale - smoothTime * 0.7) *
         Math.PI * 2;
 
       return {

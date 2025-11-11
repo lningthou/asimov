@@ -2,9 +2,8 @@ import { createRootRoute, createRoute, createRouter, Outlet, RouterProvider } fr
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { Toaster } from '@/components/ui/sonner';
 import Header from './components/layout/Header';
-import Footer from './components/layout/Footer';
 import Home from './pages/Home';
-import Search from './pages/Search';
+// import Search from './pages/Search';
 
 // Root layout component
 function RootComponent() {
@@ -14,8 +13,7 @@ function RootComponent() {
       <main className="flex-1">
         <Outlet />
       </main>
-      <Footer />
-      <Toaster />
+      <Toaster position="top-center" />
       {import.meta.env.DEV && <TanStackRouterDevtools />}
     </div>
   );
@@ -32,14 +30,14 @@ const indexRoute = createRoute({
   component: Home,
 });
 
-const searchRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/search',
-  component: Search,
-});
+// const searchRoute = createRoute({
+//   getParentRoute: () => rootRoute,
+//   path: '/search',
+//   component: Search,
+// });
 
 // Create route tree
-const routeTree = rootRoute.addChildren([indexRoute, searchRoute]);
+const routeTree = rootRoute.addChildren([indexRoute]);
 
 // Create router
 const router = createRouter({ routeTree });

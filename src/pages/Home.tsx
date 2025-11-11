@@ -1,9 +1,11 @@
-
+import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { ArrowRight } from 'lucide-react';
 import HeroViz from '@/components/hero/HeroViz';
+import RequestDataModal from '@/components/forms/RequestDataModal';
 
 export default function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const partnerLogos = ['OpenAI', 'Meta', 'Google', 'Tesla', 'Boston Dynamics', 'Figure'];
 
   return (
@@ -30,16 +32,13 @@ export default function Home() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="btn-primary text-lg px-8 h-14 inline-flex items-center justify-center">
+                <button 
+                  onClick={() => setIsModalOpen(true)}
+                  className="bg-[var(--accent)] text-[var(--bg)] font-medium text-lg px-8 h-14 inline-flex items-center justify-center hover:opacity-90 transition-opacity"
+                >
                   Request Data
                   <ArrowRight className="ml-2" size={20} />
                 </button>
-
-                <Link to="/search">
-                  <button className="btn-ghost text-lg px-8 h-14 inline-flex items-center justify-center w-full">
-                    Explore Search
-                  </button>
-                </Link>
               </div>
             </div>
 
@@ -54,7 +53,7 @@ export default function Home() {
       </section>
 
       {/* Backed By Row */}
-      <section className="py-16 border-y border-[var(--border)] bg-[var(--surface)]">
+      {/* <section className="py-16 border-y border-[var(--border)] bg-[var(--surface)]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <span className="tag">BACKED BY</span>
@@ -71,7 +70,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Problem Section */}
       <section className="py-24 container mx-auto px-4">
@@ -164,12 +163,18 @@ export default function Home() {
           <p className="text-xl text-secondary max-w-2xl mx-auto">
             Join our early access program and get custom data for your robotics project.
           </p>
-          <button className="btn-primary text-lg px-10 h-14 inline-flex items-center justify-center">
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="bg-[var(--accent)] text-[var(--bg)] font-medium text-lg px-10 h-14 inline-flex items-center justify-center hover:opacity-90 transition-opacity"
+          >
             Request Data
             <ArrowRight className="ml-2" size={20} />
           </button>
         </div>
       </section>
+
+      {/* Request Data Modal */}
+      <RequestDataModal open={isModalOpen} onOpenChange={setIsModalOpen} />
     </div>
   );
 }
