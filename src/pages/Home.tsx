@@ -1,10 +1,10 @@
-
-import { Link } from '@tanstack/react-router';
+import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import HeroViz from '@/components/hero/HeroViz';
+import RequestDataModal from '@/components/forms/RequestDataModal';
 
 export default function Home() {
-  const partnerLogos = ['OpenAI', 'Meta', 'Google', 'Tesla', 'Boston Dynamics', 'Figure'];
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="w-full">
@@ -30,16 +30,13 @@ export default function Home() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="btn-primary text-lg px-8 h-14 inline-flex items-center justify-center">
+                <button 
+                  onClick={() => setIsModalOpen(true)}
+                  className="bg-[var(--accent)] text-[var(--bg)] font-medium text-lg px-8 h-14 inline-flex items-center justify-center hover:opacity-90 transition-opacity"
+                >
                   Request Data
                   <ArrowRight className="ml-2" size={20} />
                 </button>
-
-                <Link to="/search">
-                  <button className="btn-ghost text-lg px-8 h-14 inline-flex items-center justify-center w-full">
-                    Explore Search
-                  </button>
-                </Link>
               </div>
             </div>
 
@@ -54,7 +51,7 @@ export default function Home() {
       </section>
 
       {/* Backed By Row */}
-      <section className="py-16 border-y border-[var(--border)] bg-[var(--surface)]">
+      {/* <section className="py-16 border-y border-[var(--border)] bg-[var(--surface)]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <span className="tag">BACKED BY</span>
@@ -71,7 +68,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Problem Section */}
       <section className="py-24 container mx-auto px-4">
@@ -79,18 +76,13 @@ export default function Home() {
           <div className="mb-6">
             <span className="tag">PROBLEM</span>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Collecting robot training data is slow, fragmented, and bulky.
-              </h2>
-              <p className="text-xl text-secondary">
-                Teams waste months stitching together datasets from different sources, with inconsistent formats and missing modalities.
-              </p>
-            </div>
-            <div className="aspect-[16/9] hairline bg-[var(--surface)] flex items-center justify-center">
-              <span className="text-secondary text-sm">Diagram placeholder</span>
-            </div>
+          <div className="max-w-3xl">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Collecting robot training data is slow, fragmented, and bulky.
+            </h2>
+            <p className="text-xl text-secondary">
+              Teams waste months stitching together datasets from different sources, with inconsistent formats and missing modalities.
+            </p>
           </div>
         </div>
       </section>
@@ -101,18 +93,13 @@ export default function Home() {
           <div className="mb-6">
             <span className="tag">SOLUTION</span>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="aspect-[16/9] hairline bg-[var(--bg)] flex items-center justify-center">
-              <span className="text-secondary text-sm">Diagram placeholder</span>
-            </div>
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Asimov unifies capture and discovery into a single pipeline.
-              </h2>
-              <p className="text-xl text-secondary">
-                Search existing datasets or capture new data with our hardware kits—all delivered in robot-agnostic formats aligned to Open X-Embodiment.
-              </p>
-            </div>
+          <div className="max-w-3xl">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Asimov unifies capture and discovery into a single pipeline.
+            </h2>
+            <p className="text-xl text-secondary">
+              Search existing datasets or capture new data with our hardware kits—all delivered in robot-agnostic formats aligned to Open X-Embodiment.
+            </p>
           </div>
         </div>
       </section>
@@ -164,12 +151,18 @@ export default function Home() {
           <p className="text-xl text-secondary max-w-2xl mx-auto">
             Join our early access program and get custom data for your robotics project.
           </p>
-          <button className="btn-primary text-lg px-10 h-14 inline-flex items-center justify-center">
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="bg-[var(--accent)] text-[var(--bg)] font-medium text-lg px-10 h-14 inline-flex items-center justify-center hover:opacity-90 transition-opacity"
+          >
             Request Data
             <ArrowRight className="ml-2" size={20} />
           </button>
         </div>
       </section>
+
+      {/* Request Data Modal */}
+      <RequestDataModal open={isModalOpen} onOpenChange={setIsModalOpen} />
     </div>
   );
 }
