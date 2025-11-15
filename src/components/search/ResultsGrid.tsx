@@ -1,10 +1,10 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import DataResultCard from './DataResultCard';
 import EmptyState from './EmptyState';
-import type { DataResult } from './mockData';
+import type { GroupedDataResult } from './mockData';
 
 interface ResultsGridProps {
-  results: DataResult[];
+  results: GroupedDataResult[];
   loading: boolean;
   onReset: () => void;
 }
@@ -38,7 +38,7 @@ export default function ResultsGrid({ results, loading, onReset }: ResultsGridPr
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {results.map((result, index) => (
-        <div key={`${result.task}-${index}`}>
+        <div key={`${result.caption}-${index}`}>
           <DataResultCard result={result} />
         </div>
       ))}

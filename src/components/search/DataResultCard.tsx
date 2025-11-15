@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Play, Target } from 'lucide-react';
+import { Play, Target, FileVideo } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import type { DataResult } from './mockData';
+import type { GroupedDataResult } from './mockData';
 
 interface DataResultCardProps {
-  result: DataResult;
+  result: GroupedDataResult;
 }
 
 export default function DataResultCard({ result }: DataResultCardProps) {
@@ -43,7 +43,7 @@ export default function DataResultCard({ result }: DataResultCardProps) {
               variant="outline"
               className="text-xs border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)] flex-shrink-0"
             >
-              {formatScore(result.score)}
+              {formatScore(result.avgScore)}
             </Badge>
           </div>
 
@@ -52,9 +52,17 @@ export default function DataResultCard({ result }: DataResultCardProps) {
           </p>
 
           {/* Metadata */}
-          <div className="flex items-center gap-2 text-sm text-secondary">
-            <Target size={14} />
-            <span className="font-mono text-xs">{result.task}</span>
+          <div className="flex items-center justify-between gap-2 text-sm text-secondary">
+            <div className="flex items-center gap-2">
+              <Target size={14} />
+              <span className="font-mono text-xs">{result.task}</span>
+            </div>
+            {result.files.length > 1 && (
+              <div className="flex items-center gap-1 text-xs">
+                <FileVideo size={14} />
+                <span>{result.files.length} files</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -64,13 +72,13 @@ export default function DataResultCard({ result }: DataResultCardProps) {
           variant="outline"
           className="w-full mt-4 border-[var(--border)] hover:border-[var(--accent)] rounded-none"
         >
-          Preview
+          Preview {result.files.length > 1 ? `(${result.files.length})` : ''}
         </Button>
       </div>
 
       {/* Preview Dialog */}
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-        <DialogContent className="bg-[var(--bg)] border-[var(--border)] max-w-3xl">
+        <DialogContent className="bg-[var(--bg)] border-[var(--border)] max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-primary">{formatTaskName(result.task)}</DialogTitle>
             <DialogDescription className="text-secondary">
@@ -83,7 +91,6 @@ export default function DataResultCard({ result }: DataResultCardProps) {
             <div className="w-full aspect-video bg-[var(--surface)] rounded-none flex items-center justify-center hairline">
               <div className="text-center">
                 <Play size={64} className="text-secondary opacity-50 mx-auto mb-2" />
-                <p className="text-secondary text-sm">Video preview placeholder</p>
               </div>
             </div>
 
@@ -94,23 +101,42 @@ export default function DataResultCard({ result }: DataResultCardProps) {
                 <span className="text-primary ml-2">{result.task}</span>
               </div>
               <div>
-                <span className="text-secondary">Score:</span>
-                <span className="text-primary ml-2">{formatScore(result.score)}</span>
+                <span className="text-secondary">Avg Score:</span>
+                <span className="text-primary ml-2">{formatScore(result.avgScore)}</span>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <div>
-                <span className="text-secondary text-sm">MP4:</span>
-                <p className="text-primary text-xs font-mono mt-1 p-2 bg-[var(--surface)] rounded break-all">
-                  {result.mp4}
-                </p>
+            {/* Files List */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <FileVideo size={16} className="text-secondary" />
+                <span className="text-secondary text-sm font-medium">
+                  Available Files ({result.files.length})
+                </span>
               </div>
-              <div>
-                <span className="text-secondary text-sm">HDF5:</span>
-                <p className="text-primary text-xs font-mono mt-1 p-2 bg-[var(--surface)] rounded break-all">
-                  {result.hdf5}
-                </p>
+              <div className="space-y-3 max-h-[400px] overflow-y-auto">
+                {result.files.map((file, idx) => (
+                  <div key={idx} className="bg-[var(--surface)] hairline p-3 rounded space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-secondary">File {idx + 1}</span>
+                      <Badge variant="outline" className="text-xs">
+                        {formatScore(file.score)}
+                      </Badge>
+                    </div>
+                    <div>
+                      <span className="text-secondary text-xs">MP4:</span>
+                      <p className="text-primary text-xs font-mono mt-1 break-all">
+                        {file.mp4}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-secondary text-xs">HDF5:</span>
+                      <p className="text-primary text-xs font-mono mt-1 break-all">
+                        {file.hdf5}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

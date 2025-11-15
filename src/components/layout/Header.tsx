@@ -41,13 +41,23 @@ export default function Header() {
       }`}
     >
       <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo - lowercase wordmark */}
           <Link to="/" className="flex items-center group">
             <div className="text-2xl font-bold text-primary">
               asimov
             </div>
           </Link>
+
+          {/* Navigation */}
+          <nav className="flex items-center gap-6">
+            <Link
+              to="/search"
+              className="text-primary hover:text-[var(--accent)] transition-colors font-medium"
+            >
+              Search
+            </Link>
+          </nav>
         </div>
       </div>
     </header>

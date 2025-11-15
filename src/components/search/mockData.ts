@@ -6,6 +6,17 @@ export type DataResult = {
   hdf5: string;
 };
 
+export type GroupedDataResult = {
+  task: string;
+  caption: string;
+  avgScore: number;
+  files: Array<{
+    mp4: string;
+    hdf5: string;
+    score: number;
+  }>;
+};
+
 export const mockData: DataResult[] = [
   {
     task: 'throw_and_catch_ball',

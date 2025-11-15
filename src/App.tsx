@@ -3,7 +3,7 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { Toaster } from '@/components/ui/sonner';
 import Header from './components/layout/Header';
 import Home from './pages/Home';
-// import Search from './pages/Search';
+import Search from './pages/Search';
 
 // Root layout component
 function RootComponent() {
@@ -30,14 +30,14 @@ const indexRoute = createRoute({
   component: Home,
 });
 
-// const searchRoute = createRoute({
-//   getParentRoute: () => rootRoute,
-//   path: '/search',
-//   component: Search,
-// });
+const searchRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/search',
+  component: Search,
+});
 
 // Create route tree
-const routeTree = rootRoute.addChildren([indexRoute]);
+const routeTree = rootRoute.addChildren([indexRoute, searchRoute]);
 
 // Create router
 const router = createRouter({ routeTree });
