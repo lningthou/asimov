@@ -134,7 +134,9 @@ export default function DataResultCard({ result }: DataResultCardProps) {
             <Badge
               variant="outline"
               className="text-xs border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)] flex-shrink-0"
+              title="Similarity score - how well this matches your query"
             >
+              <span className="text-[10px] opacity-70 mr-1">Match:</span>
               {formatScore(result.avgScore)}
             </Badge>
           </div>
@@ -202,7 +204,7 @@ export default function DataResultCard({ result }: DataResultCardProps) {
                 <span className="text-primary ml-2">{result.task}</span>
               </div>
               <div>
-                <span className="text-secondary">Avg Score:</span>
+                <span className="text-secondary">Similarity:</span>
                 <span className="text-primary ml-2">{formatScore(result.avgScore)}</span>
               </div>
             </div>
@@ -220,7 +222,12 @@ export default function DataResultCard({ result }: DataResultCardProps) {
                   <div key={idx} className="bg-[var(--surface)] hairline p-4 rounded space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-semibold text-primary">File {idx + 1}</span>
-                      <Badge variant="outline" className="text-xs">
+                      <Badge 
+                        variant="outline" 
+                        className="text-xs"
+                        title="Similarity score for this file"
+                      >
+                        <span className="text-[10px] opacity-70 mr-1">Match:</span>
                         {formatScore(file.score)}
                       </Badge>
                     </div>

@@ -21,7 +21,7 @@ export default function SearchBar({ value, onChange, onSearch }: SearchBarProps)
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" size={20} />
           <Input
             type="text"
-            placeholder='Try "ball" or "throw and catch"'
+            placeholder='Try "jenga" or "throw ball"'
             value={value}
             onChange={(e) => onChange(e.target.value)}
             className="pl-10 bg-[var(--bg)] border-[var(--border)] text-primary h-12"
