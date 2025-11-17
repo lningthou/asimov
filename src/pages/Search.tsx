@@ -90,8 +90,9 @@ export default function Search() {
       if (groupedData.length === 0) {
         toast.info('No results found for your query');
       } else {
-        const totalFiles = groupedData.reduce((sum, r) => sum + r.files.length, 0);
-        toast.success(`Found ${groupedData.length} unique ${groupedData.length === 1 ? 'task' : 'tasks'} (${totalFiles} files)`);
+        const totalDemos = groupedData.reduce((sum, r) => sum + r.files.length, 0);
+        const totalFiles = totalDemos * 2; // Each demo has MP4 + HDF5
+        toast.success(`Found ${groupedData.length} unique ${groupedData.length === 1 ? 'task' : 'tasks'} (${totalDemos} demos · ${totalFiles} files)`);
       }
     } catch (error) {
       console.error('Search error:', error);

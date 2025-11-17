@@ -154,7 +154,7 @@ export default function DataResultCard({ result }: DataResultCardProps) {
             {result.files.length > 1 && (
               <div className="flex items-center gap-1 text-xs">
                 <FileVideo size={14} />
-                <span>{result.files.length} files</span>
+                <span>{result.files.length} demos ({result.files.length * 2} files)</span>
               </div>
             )}
           </div>
@@ -214,14 +214,14 @@ export default function DataResultCard({ result }: DataResultCardProps) {
               <div className="flex items-center gap-2 mb-3">
                 <FileVideo size={16} className="text-secondary" />
                 <span className="text-secondary text-sm font-medium">
-                  Available Files ({result.files.length})
+                  Demonstrations ({result.files.length}) · {result.files.length * 2} total files
                 </span>
               </div>
               <div className="space-y-3 max-h-[400px] overflow-y-auto">
                 {result.files.map((file, idx) => (
                   <div key={idx} className="bg-[var(--surface)] hairline p-4 rounded space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold text-primary">File {idx + 1}</span>
+                      <span className="text-sm font-semibold text-primary">Demo {idx + 1} <span className="text-xs text-secondary">(MP4 + HDF5)</span></span>
                       <Badge 
                         variant="outline" 
                         className="text-xs"
