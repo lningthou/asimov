@@ -4,56 +4,96 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+import JSZip from 'jszip';
 import type { GroupedDataResult } from './mockData';
 
-// Helper to trigger download - Safari compatible
-const handleDownload = async (url: string, filename: string) => {
+// Helper to download a blob as a file
+const downloadBlob = (blob: Blob, filename: string) => {
+  const blobUrl = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = blobUrl;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  // Clean up blob URL after a short delay
+  setTimeout(() => {
+    window.URL.revokeObjectURL(blobUrl);
+  }, 100);
+};
+
+// Fetch file as blob
+const fetchFileBlob = async (url: string, filename: string): Promise<{ blob: Blob; filename: string }> => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${filename}: ${response.statusText}`);
+  }
+  const blob = await response.blob();
+  return { blob, filename };
+};
+
+// Download both MP4 and HDF5 as a zip
+const handleDownloadBoth = async (mp4Url: string, hdf5Url: string, taskName: string, fileIndex: number) => {
   try {
-    // Try to fetch and download as blob for better cross-browser support
-    const response = await fetch(url);
+    toast.info('Preparing download...');
     
-    if (!response.ok) {
-      throw new Error(`Download failed: ${response.statusText}`);
-    }
+    const zip = new JSZip();
     
-    const blob = await response.blob();
-    const blobUrl = window.URL.createObjectURL(blob);
+    // Fetch both files
+    const [mp4Data, hdf5Data] = await Promise.all([
+      fetchFileBlob(mp4Url, `${taskName}_${fileIndex}.mp4`),
+      fetchFileBlob(hdf5Url, `${taskName}_${fileIndex}.hdf5`),
+    ]);
     
-    const link = document.createElement('a');
-    link.href = blobUrl;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Add files to zip
+    zip.file(mp4Data.filename, mp4Data.blob);
+    zip.file(hdf5Data.filename, hdf5Data.blob);
     
-    // Clean up blob URL after a short delay
-    setTimeout(() => {
-      window.URL.revokeObjectURL(blobUrl);
-    }, 100);
+    // Generate zip and download
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+    downloadBlob(zipBlob, `${taskName}_${fileIndex}.zip`);
+    
+    toast.success('Download complete!');
   } catch (error) {
-    // Show error message instead of popup
     console.error('Download failed:', error);
-    toast.error(`Failed to download ${filename}. Please try again or copy the URL manually.`);
+    toast.error('Failed to download files. Please try again.');
   }
 };
 
-// Download both MP4 and HDF5
-const handleDownloadBoth = async (mp4Url: string, hdf5Url: string, taskName: string, fileIndex: number) => {
-  await handleDownload(mp4Url, `${taskName}_${fileIndex}.mp4`);
-  await new Promise(resolve => setTimeout(resolve, 100));
-  await handleDownload(hdf5Url, `${taskName}_${fileIndex}.hdf5`);
-};
-
-// Download all files in a grouped result
+// Download all files in a grouped result as a zip
 const handleDownloadAll = async (result: GroupedDataResult) => {
-  for (let idx = 0; idx < result.files.length; idx++) {
-    const file = result.files[idx];
-    await handleDownload(file.mp4, `${result.task}_${idx + 1}.mp4`);
-    await new Promise(resolve => setTimeout(resolve, 100));
-    await handleDownload(file.hdf5, `${result.task}_${idx + 1}.hdf5`);
-    if (idx < result.files.length - 1) {
-      await new Promise(resolve => setTimeout(resolve, 200));
-    }
+  try {
+    toast.info(`Preparing ${result.files.length * 2} files...`);
+    
+    const zip = new JSZip();
+    
+    // Fetch all files in parallel
+    const fetchPromises: Promise<{ blob: Blob; filename: string }>[] = [];
+    
+    result.files.forEach((file, idx) => {
+      fetchPromises.push(
+        fetchFileBlob(file.mp4, `${result.task}_${idx + 1}.mp4`),
+        fetchFileBlob(file.hdf5, `${result.task}_${idx + 1}.hdf5`)
+      );
+    });
+    
+    const allFiles = await Promise.all(fetchPromises);
+    
+    // Add all files to zip
+    allFiles.forEach(({ blob, filename }) => {
+      zip.file(filename, blob);
+    });
+    
+    // Generate zip and download
+    toast.info('Creating zip file...');
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+    downloadBlob(zipBlob, `${result.task}_all.zip`);
+    
+    toast.success('Download complete!');
+  } catch (error) {
+    console.error('Download failed:', error);
+    toast.error('Failed to download files. Please try again.');
   }
 };
 
